@@ -17,6 +17,7 @@ dependencies = [
     "click",
     "python-dotenv",
     "python-dateutil",
+    "github-copilot-sdk",
 ]
 
 [project.optional-dependencies]
@@ -27,6 +28,7 @@ dev = [
 
 [project.scripts]
 ingest = "ingest.__main__:cli"
+analysis = "analysis.__main__:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -40,6 +40,7 @@ class Update(Base):
     )
 
     source: Mapped["Source"] = relationship(back_populates="updates")  # noqa: F821
+    report: Mapped["Report"] = relationship(back_populates="update")  # noqa: F821
 
     def __repr__(self) -> str:
         return f"<Update title={self.title!r}>"

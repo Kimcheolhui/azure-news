@@ -18,6 +18,7 @@ if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
 
 from ingest.models import Base  # noqa: E402
+import analysis.models  # noqa: E402, F401  -- register Report/ReportRun on shared Base
 
 target_metadata = Base.metadata
 
