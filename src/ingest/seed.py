@@ -26,7 +26,6 @@ DEFAULT_SOURCES = [
         "name": "fabric-blog",
         "url": "https://blog.fabric.microsoft.com/",
         "source_type": "web",
-        "enabled": False,
     },
     {
         "name": "github-blog",
