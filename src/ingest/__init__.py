@@ -1,0 +1,1 @@
+"""Azure Updates ingestion pipeline."""

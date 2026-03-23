@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "azure-ingest"
+version = "0.1.0"
+description = "Data ingestion pipeline for Azure updates"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "alembic",
+    "psycopg2-binary",
+    "requests",
+    "beautifulsoup4",
+    "feedparser",
+    "click",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+]
+
+[project.scripts]
+ingest = "ingest.__main__:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
