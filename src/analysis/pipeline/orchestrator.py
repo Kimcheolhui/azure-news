@@ -101,7 +101,6 @@ async def run_pipeline(update_id: str | uuid.UUID) -> Report:
         ValueError: If the update does not exist.
     """
     logger.info("Pipeline started for update %s", update_id)
-    settings = AnalysisSettings.from_env()
     uid = uuid.UUID(str(update_id))
 
     # ── 1. Load the Update ──────────────────────────────────────────
@@ -213,7 +212,7 @@ async def run_pipeline(update_id: str | uuid.UUID) -> Report:
             rpt.related_update_ids = [
                 r["id"] for r in research_data.get("related_updates", [])
             ]
-            rpt.model_used = settings.model
+            rpt.model_used = AnalysisSettings.from_env().model
             rpt.generated_at = _now()
             rpt.status = "completed"
     except Exception as exc:
