@@ -21,6 +21,9 @@ def extract_json(text: str) -> dict | None:
     Returns:
         The parsed ``dict``, or ``None`` if all attempts fail.
     """
+    if not text:
+        return None
+
     # 1. Direct parse
     try:
         result = json.loads(text)
