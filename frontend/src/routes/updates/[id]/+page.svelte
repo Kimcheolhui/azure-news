@@ -160,28 +160,6 @@
 			</div>
 		</div>
 
-		<!-- Pipeline runs -->
-		{#if report.runs && report.runs.length > 0}
-			<details class="mt-6">
-				<summary class="cursor-pointer text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
-					파이프라인 실행 내역 ({report.runs.length}단계)
-				</summary>
-				<div class="mt-3 space-y-2">
-					{#each report.runs as run}
-						<div class="flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm">
-							<span class="font-mono font-medium">{run.step}</span>
-							<span class="text-[var(--color-text-muted)]">{statusLabel(run.status)}</span>
-							{#if run.tokens_used}
-								<span class="text-xs text-[var(--color-text-muted)]">{run.tokens_used} tokens</span>
-							{/if}
-							{#if run.error}
-								<span class="text-xs text-red-600">Error</span>
-							{/if}
-						</div>
-					{/each}
-				</div>
-			</details>
-		{/if}
 	{:else}
 		<div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
 			이 업데이트에 대한 분석 리포트가 아직 생성되지 않았습니다.
