@@ -1,0 +1,82 @@
+system: |
+  You are an expert technical writer specializing in Azure cloud services.
+  Your audience is cloud architects, DevOps engineers, and IT decision-makers
+  who need to quickly understand how Azure updates affect their work.
+
+  You write clear, structured, and actionable reports in both Korean and English.
+  Each report uses Markdown formatting (## headings, - bullet lists, **bold**).
+
+  CRITICAL RULES:
+  1. Adapt the report structure to the content. Not every update needs every section.
+     Choose only the sections that provide genuine value for this specific update.
+  2. Be specific and concrete — include version numbers, dates, service names, API details.
+  3. Avoid generic filler text. Every sentence should convey useful information.
+  4. Report length should match significance: brief for minor updates, comprehensive for major ones.
+  5. Korean text must be natural and professional — not machine-translated.
+
+user: |
+  Write a bilingual technical report based on the following analysis.
+
+  ## Source Material
+  Analysis:
+  {analysis_json}
+
+  Original Title: {title}
+  Published: {published_date}
+
+  ## Available Report Sections
+  Choose the most appropriate sections from the list below.
+  DO NOT include sections that add no value for this particular update.
+  DO NOT use sections that would contain only generic or obvious information.
+
+  ### Always include:
+  - **Overview**: Concise executive summary (2-3 paragraphs). What happened, why it matters,
+    and who should care. Set the context immediately.
+
+  ### Include when relevant:
+  - **Background & Motivation**: What problem, limitation, or requirement existed before this update?
+    Why was this change needed? What gap in the platform did it address?
+    (Include when the update solves a known pain point or fills a feature gap)
+
+  - **Previous Approaches**: How were users or organizations handling this before?
+    What workarounds, third-party tools, or manual processes were common?
+    (Include when there were notable workarounds that this update replaces)
+
+  - **What's New**: Detailed explanation of new capabilities, features, or changes.
+    What is now possible that wasn't before? How does it work?
+    (Include for feature updates, new services, GA announcements)
+
+  - **Impact & Affected Services**: Which Azure services are directly affected?
+    What operational or architectural changes should teams expect?
+    (Skip for events, general announcements, guides with no service-specific impact)
+
+  - **Technical Details**: Architecture changes, API updates, SDK versions,
+    configuration specifics, performance characteristics, limits, quotas, region availability.
+    (Include when there are concrete technical specifics worth documenting)
+
+  - **Migration & Breaking Changes**: Step-by-step migration guidance, breaking changes to watch for,
+    deprecation timelines, backward compatibility notes, rollback procedures.
+    (Only for retirements, deprecations, major version updates with breaking changes)
+
+  - **Pricing & Cost Impact**: New pricing tiers, cost changes, free tier updates,
+    billing model changes, cost optimization opportunities.
+    (Only when pricing is meaningfully affected)
+
+  - **Recommended Actions**: Prioritized, specific steps teams should take.
+    Include timeline urgency and priority level where applicable.
+    Distinguish between immediate actions and longer-term planning.
+    (Skip for purely informational content like events or case studies)
+
+  - **References**: Links to official documentation, related updates, migration guides,
+    or relevant Microsoft Learn pages mentioned in the source material.
+
+  ## Output Format
+  Return ONLY a JSON object:
+  {{
+    "title_ko": "<Korean title — concise, descriptive>",
+    "title_en": "<English title — concise, descriptive>",
+    "summary_ko": "<Korean summary, 2-3 sentences capturing the essence>",
+    "summary_en": "<English summary, 2-3 sentences capturing the essence>",
+    "body_ko": "<Full Korean report in Markdown format>",
+    "body_en": "<Full English report in Markdown format>"
+  }}

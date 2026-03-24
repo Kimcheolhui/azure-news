@@ -17,8 +17,11 @@ _EXPECTED_KEYS = (
     "update_type",
     "affected_services",
     "impact_summary",
+    "background_context",
     "key_details",
+    "breaking_changes",
     "action_items",
+    "significance",
 )
 
 
@@ -99,12 +102,16 @@ async def analyze_update(
             "update_type": "update",
             "affected_services": [],
             "impact_summary": "",
+            "background_context": "",
             "key_details": [],
+            "breaking_changes": [],
             "action_items": [],
+            "significance": "medium",
             "raw_response": raw_response,
             "parse_error": "Could not extract valid JSON from model response",
         }
 
-    result: dict = {key: parsed.get(key, [] if key in ("affected_services", "key_details", "action_items") else "") for key in _EXPECTED_KEYS}
+    _LIST_KEYS = {"affected_services", "key_details", "breaking_changes", "action_items"}
+    result: dict = {key: parsed.get(key, [] if key in _LIST_KEYS else "") for key in _EXPECTED_KEYS}
     result["raw_response"] = raw_response
     return result

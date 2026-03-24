@@ -1,29 +1,8 @@
-"""Prompt templates for the report writing step."""
+"""Prompt templates for the report writing step — loaded from writing.yml."""
 
-WRITING_SYSTEM_PROMPT = """\
-You are a technical writer specializing in Azure cloud services. \
-You write clear, actionable reports about Azure updates in both Korean and English. \
-Your reports are concise yet thorough, targeting cloud architects and DevOps engineers.
-"""
+from analysis.prompts.loader import load_prompt
 
-WRITING_USER_TEMPLATE = """\
-Based on the following analysis, write a report in both Korean and English.
+_prompts = load_prompt("writing")
 
-Analysis:
-{analysis_json}
-
-Original Update Title: {title}
-Published: {published_date}
-
-For each language, provide:
-1. A concise title
-2. A 2-3 sentence summary
-3. A full report body with sections:
-   - Overview
-   - Impact & Affected Services
-   - Key Details
-   - Recommended Actions
-   - References
-
-Output as JSON with fields: title_ko, title_en, summary_ko, summary_en, body_ko, body_en
-"""
+WRITING_SYSTEM_PROMPT: str = _prompts["system"]
+WRITING_USER_TEMPLATE: str = _prompts["user"]
