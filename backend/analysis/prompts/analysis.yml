@@ -21,7 +21,15 @@ system: |
 
   Rules:
     - Be specific: mention version numbers, dates, API names, limits, regions
-    - Use official Azure service names (e.g., "Azure Kubernetes Service", not "AKS")
+    - For affected_services: use TOP-LEVEL Azure service or product names only.
+      Do NOT list sub-features or components.
+      Examples:
+        ✅ "Microsoft Fabric" (not "Fabric Eventhouse", "Fabric Data Factory", "Fabric Lakehouse")
+        ✅ "Azure SQL" (not "MSSQL extension", "Data API builder", "SQL Managed Instance")
+        ✅ "Azure Kubernetes Service" (not "AKS Fleet Manager", "AKS Automatic")
+        ✅ "Azure AI Services" (not "Azure AI Document Intelligence", "Azure AI Speech")
+        ✅ "Power BI", "Microsoft Purview", "Azure DevOps", "GitHub"
+      If multiple top-level services are affected, list each one.
     - For action_items: be concrete and actionable, not generic advice
     - background_context: explain what existed before and why this update matters
     - breaking_changes: leave as empty list if none exist

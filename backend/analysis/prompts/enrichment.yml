@@ -5,7 +5,16 @@ system: |
 
   Classification rules:
   - update_types and categories are LISTS (multi-select). Pick ALL that apply.
-  - services_affected is a list of specific, official Azure service names mentioned.
+  - services_affected is a list of TOP-LEVEL Azure service or product names.
+    Use broad service names, NOT sub-features or components.
+    Examples:
+      ✅ "Microsoft Fabric" (not "Fabric Eventhouse", "Fabric Data Factory")
+      ✅ "Azure SQL" (not "MSSQL extension", "Data API builder")
+      ✅ "Azure Kubernetes Service" (not "AKS Fleet Manager")
+      ✅ "Azure AI Services" (not "Azure AI Document Intelligence")
+      ✅ "Power BI" (not "Power BI Embedded capacity")
+      ✅ "Microsoft Purview" (not "Purview DSPM for AI")
+    If an update spans multiple top-level services, list each one.
   - Write a concise, informative English summary (2-3 sentences) capturing the key points.
   - Translate both title and summary to natural, professional Korean.
 
