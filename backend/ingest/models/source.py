@@ -19,6 +19,7 @@ class Source(Base):
         server_default=text("gen_random_uuid()"),
     )
     name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    display_name: Mapped[str | None] = mapped_column(String, nullable=True)
     url: Mapped[str] = mapped_column(String, nullable=False)
     source_type: Mapped[str] = mapped_column(String, nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"))
@@ -34,6 +35,10 @@ class Source(Base):
 
     updates: Mapped[list["Update"]] = relationship(back_populates="source")  # noqa: F821
     ingest_runs: Mapped[list["IngestRun"]] = relationship(back_populates="source")  # noqa: F821
+
+    @property
+    def label(self) -> str:
+        return self.display_name or self.name
 
     def __repr__(self) -> str:
         return f"<Source name={self.name!r} type={self.source_type!r}>"

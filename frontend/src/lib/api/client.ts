@@ -87,6 +87,7 @@ export interface ReportDetail {
 export interface Source {
 	id: string;
 	name: string;
+	display_name: string | null;
 	url: string;
 	source_type: string;
 	enabled: boolean;

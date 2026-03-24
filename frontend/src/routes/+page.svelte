@@ -120,30 +120,30 @@
 
 <!-- Search & Filters -->
 <div class="mb-6 space-y-3">
-	<div class="flex flex-wrap items-center gap-2">
+	<div class="flex items-center gap-2">
 		<input
 			type="text"
 			placeholder="검색..."
 			bind:value={searchQuery}
 			onkeydown={(e) => e.key === 'Enter' && applyFilters()}
-			class="w-40 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm
+			class="min-w-0 flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm
 				focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
 		/>
 		<select
 			bind:value={selectedSource}
 			onchange={applyFilters}
-			class="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
+			class="shrink-0 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
 				focus:border-[var(--color-primary)] focus:outline-none"
 		>
 			<option value="">모든 소스</option>
 			{#each sources as source}
-				<option value={source.id}>{source.name}</option>
+				<option value={source.id}>{source.display_name || source.name}</option>
 			{/each}
 		</select>
 		<select
 			bind:value={selectedType}
 			onchange={applyFilters}
-			class="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
+			class="shrink-0 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
 				focus:border-[var(--color-primary)] focus:outline-none"
 		>
 			<option value="">모든 유형</option>
@@ -159,7 +159,7 @@
 		/>
 		<button
 			onclick={applyFilters}
-			class="rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white
+			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white
 				hover:bg-[var(--color-primary-hover)] transition-colors"
 		>
 			검색
@@ -167,7 +167,7 @@
 		{#if searchQuery || selectedSource || selectedType || dateFrom || dateTo}
 			<button
 				onclick={clearFilters}
-				class="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm text-[var(--color-text-muted)]
+				class="shrink-0 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm text-[var(--color-text-muted)]
 					hover:bg-gray-50 transition-colors"
 			>
 				초기화

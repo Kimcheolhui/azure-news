@@ -16,6 +16,7 @@ class SourceOut(BaseModel):
 
     id: UUID
     name: str
+    display_name: str | None = None
     url: str
     source_type: str
     enabled: bool
