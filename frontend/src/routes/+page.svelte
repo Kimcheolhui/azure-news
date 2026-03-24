@@ -320,7 +320,24 @@
 			>
 				<div class="flex items-start justify-between gap-3">
 					<div class="min-w-0 flex-1">
-						<h3 class="text-base font-medium text-[var(--color-text)] truncate">{update.title_ko || update.title}</h3>
+						<div class="flex items-center gap-2">
+							<h3 class="text-base font-medium text-[var(--color-text)] truncate">{update.title_ko || update.title}</h3>
+							{#if update.services_affected && update.services_affected.length > 0}
+								<div class="shrink-0 flex flex-wrap gap-1">
+									{#each update.services_affected.slice(0, 3) as service}
+										<span class="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700"
+											style="box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+											{service}
+										</span>
+									{/each}
+									{#if update.services_affected.length > 3}
+										<span class="rounded-md bg-gray-50 px-2 py-0.5 text-xs text-[var(--color-text-muted)]">
+											+{update.services_affected.length - 3}
+										</span>
+									{/if}
+								</div>
+							{/if}
+						</div>
 						{#if update.title_ko}
 							<p class="mt-1 text-xs text-[var(--color-text-muted)] truncate">{update.title}</p>
 						{/if}
