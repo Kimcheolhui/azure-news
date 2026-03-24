@@ -1,12 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { getUpdate, getReport, type UpdateDetail, type ReportDetail } from '$lib/api/client';
+	import { marked } from 'marked';
 
 	let update: UpdateDetail | null = $state(null);
 	let report: ReportDetail | null = $state(null);
 	let loading = $state(true);
 	let error = $state('');
 	let lang: 'ko' | 'en' = $state('ko');
+
+	let renderedBody = $derived.by(() => {
+		const raw = lang === 'ko' ? report?.body_ko : report?.body_en;
+		if (!raw) return '';
+		return marked.parse(raw, { async: false }) as string;
+	});
 
 	const id = $derived(page.params.id!);
 
@@ -222,7 +229,7 @@
 			{/if}
 
 			<div class="prose prose-sm max-w-none text-[var(--color-text)] leading-relaxed">
-				{@html (lang === 'ko' ? report.body_ko : report.body_en)?.replace(/\n/g, '<br>') ?? ''}
+				{@html renderedBody}
 			</div>
 		</div>
 
