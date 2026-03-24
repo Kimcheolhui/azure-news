@@ -195,7 +195,7 @@
 </section>
 
 <!-- Search & Filters -->
-<div class="mb-6 space-y-4">
+<div class="mb-6 space-y-6">
 	<div class="flex items-center gap-4">
 		<input
 			type="text"
