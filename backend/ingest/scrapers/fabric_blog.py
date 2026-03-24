@@ -75,7 +75,7 @@ class FabricBlogScraper(BaseScraper):
                     "title": entry.get("title", ""),
                     "source_url": entry.get("link", ""),
                     "published_date": published,
-                    "summary": strip_html(entry.get("summary", "")),
+                    "summary": "",
                     "categories": categories or None,
                     "raw_data": dict(entry),
                 }
@@ -165,7 +165,7 @@ class FabricBlogScraper(BaseScraper):
                     "title": title,
                     "source_url": href,
                     "published_date": published,
-                    "summary": summary,
+                    "summary": "",
                     "categories": None,
                     "raw_data": {"html_snippet": str(article)[:2000]},
                 }

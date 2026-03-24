@@ -47,7 +47,7 @@ class AzureUpdatesRssScraper(BaseScraper):
                     "title": entry.get("title", ""),
                     "source_url": entry.get("link", ""),
                     "published_date": published,
-                    "summary": strip_html(entry.get("summary", "")),
+                    "summary": "",
                     "categories": categories or None,
                     "raw_data": dict(entry),
                 }
