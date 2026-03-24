@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getUpdates, getSources, type UpdateSummary, type Source } from '$lib/api/client';
 	import DateRangePicker from '$lib/components/DateRangePicker.svelte';
+	import FilterSelect from '$lib/components/FilterSelect.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -21,8 +22,40 @@
 	let dateTo = $state('');
 	let datePickerRef: DateRangePicker;
 
-	const updateTypes = ['new_feature', 'retirement', 'preview', 'ga', 'update', 'security', 'pricing', 'deprecation', 'guide', 'case_study', 'announcement', 'event'];
-	const categories = ['compute', 'database', 'ai_ml', 'networking', 'storage', 'security', 'devtools', 'analytics', 'integration', 'management', 'iot', 'mixed_reality', 'other'];
+	const updateTypeOptions = [
+		{ value: 'new_feature', label: '🆕 신규' },
+		{ value: 'retirement', label: '🔴 종료' },
+		{ value: 'preview', label: '🔵 프리뷰' },
+		{ value: 'ga', label: '🟢 GA' },
+		{ value: 'update', label: '🔄 업데이트' },
+		{ value: 'security', label: '🔒 보안' },
+		{ value: 'pricing', label: '💰 가격' },
+		{ value: 'deprecation', label: '⚠️ 중단 예고' },
+		{ value: 'guide', label: '📖 가이드' },
+		{ value: 'case_study', label: '💡 사용 사례' },
+		{ value: 'announcement', label: '📢 공지' },
+		{ value: 'event', label: '🎪 이벤트' },
+	];
+
+	const categoryOptions = [
+		{ value: 'compute', label: 'Compute' },
+		{ value: 'database', label: 'Database' },
+		{ value: 'ai_ml', label: 'AI/ML' },
+		{ value: 'networking', label: 'Networking' },
+		{ value: 'storage', label: 'Storage' },
+		{ value: 'security', label: 'Security' },
+		{ value: 'devtools', label: 'DevTools' },
+		{ value: 'analytics', label: 'Analytics' },
+		{ value: 'integration', label: 'Integration' },
+		{ value: 'management', label: 'Management' },
+		{ value: 'iot', label: 'IoT' },
+		{ value: 'mixed_reality', label: 'Mixed Reality' },
+		{ value: 'other', label: 'Other' },
+	];
+
+	let sourceOptions = $derived(
+		sources.map((s) => ({ value: s.id, label: s.display_name || s.name }))
+	);
 
 	let totalPages = $derived(Math.ceil(total / pageSize));
 
@@ -162,14 +195,14 @@
 </section>
 
 <!-- Search & Filters -->
-<div class="mb-6 space-y-2">
-	<div class="flex items-center gap-2">
+<div class="mb-6 space-y-3">
+	<div class="flex items-center gap-4">
 		<input
 			type="text"
 			placeholder="검색..."
 			bind:value={searchQuery}
 			onkeydown={(e) => e.key === 'Enter' && applyFilters()}
-			class="min-w-0 flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm
+			class="w-3/5 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm
 				focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
 		/>
 		<button
@@ -189,44 +222,35 @@
 			</button>
 		{/if}
 	</div>
-	<div class="flex items-center gap-2">
-		<select
-			bind:value={selectedSource}
-			class="w-0 flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
-				focus:border-[var(--color-primary)] focus:outline-none"
-		>
-			<option value="">모든 소스</option>
-			{#each sources as source}
-				<option value={source.id}>{source.display_name || source.name}</option>
-			{/each}
-		</select>
-		<select
-			bind:value={selectedType}
-			class="w-0 flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
-				focus:border-[var(--color-primary)] focus:outline-none"
-		>
-			<option value="">모든 유형</option>
-			{#each updateTypes as type}
-				<option value={type}>{typeLabel(type)}</option>
-			{/each}
-		</select>
-		<select
-			bind:value={selectedCategory}
-			class="w-0 flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
-				focus:border-[var(--color-primary)] focus:outline-none"
-		>
-			<option value="">모든 카테고리</option>
-			{#each categories as cat}
-				<option value={cat}>{categoryLabel(cat)}</option>
-			{/each}
-		</select>
+	<div class="flex items-center gap-3">
+		<div class="w-0 flex-1">
+			<FilterSelect
+				options={sourceOptions}
+				bind:value={selectedSource}
+				placeholder="모든 소스"
+			/>
+		</div>
+		<div class="w-0 flex-1">
+			<FilterSelect
+				options={updateTypeOptions}
+				bind:value={selectedType}
+				placeholder="모든 유형"
+			/>
+		</div>
+		<div class="w-0 flex-1">
+			<FilterSelect
+				options={categoryOptions}
+				bind:value={selectedCategory}
+				placeholder="모든 카테고리"
+			/>
+		</div>
 		<DateRangePicker
 			bind:this={datePickerRef}
 			{dateFrom}
 			{dateTo}
 			onchange={(from, to) => { dateFrom = from; dateTo = to; }}
 		/>
-		<span class="ml-auto text-sm text-[var(--color-text-muted)]">
+		<span class="shrink-0 text-sm text-[var(--color-text-muted)]">
 			총 <strong class="text-[var(--color-text)]">{total}</strong>건
 		</span>
 	</div>
