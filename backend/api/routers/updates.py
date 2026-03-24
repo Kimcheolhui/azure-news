@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -23,6 +24,8 @@ def list_updates(
     source_id: UUID | None = None,
     update_type: str | None = None,
     q: str | None = None,
+    date_from: date | None = None,
+    date_to: date | None = None,
     db: Session = Depends(get_db),
 ) -> UpdateListOut:
     stmt = select(Update)
@@ -36,6 +39,10 @@ def list_updates(
         stmt = stmt.where(
             Update.title.ilike(f"%{q}%") | Update.title_ko.ilike(f"%{q}%")
         )
+    if date_from:
+        stmt = stmt.where(Update.published_date >= date_from)
+    if date_to:
+        stmt = stmt.where(Update.published_date <= date_to)
 
     total = db.scalar(
         select(func.count()).select_from(stmt.subquery())

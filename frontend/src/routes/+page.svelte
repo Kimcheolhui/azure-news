@@ -15,6 +15,8 @@
 	let searchQuery = $state('');
 	let selectedSource = $state('');
 	let selectedType = $state('');
+	let dateFrom = $state('');
+	let dateTo = $state('');
 
 	const updateTypes = ['new_feature', 'retirement', 'preview', 'ga', 'update', 'security', 'pricing', 'deprecation'];
 
@@ -29,7 +31,9 @@
 				page_size: pageSize,
 				source_id: selectedSource || undefined,
 				update_type: selectedType || undefined,
-				q: searchQuery || undefined
+				q: searchQuery || undefined,
+				date_from: dateFrom || undefined,
+				date_to: dateTo || undefined
 			});
 			updates = data.items;
 			total = data.total;
@@ -57,6 +61,8 @@
 		searchQuery = '';
 		selectedSource = '';
 		selectedType = '';
+		dateFrom = '';
+		dateTo = '';
 		currentPage = 1;
 		loadUpdates();
 	}
@@ -142,6 +148,25 @@
 				<option value={type}>{typeLabel(type)}</option>
 			{/each}
 		</select>
+	</div>
+	<div class="flex flex-col sm:flex-row items-center gap-3">
+		<div class="flex items-center gap-2">
+			<input
+				type="date"
+				bind:value={dateFrom}
+				onchange={applyFilters}
+				class="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
+					focus:border-[var(--color-primary)] focus:outline-none"
+			/>
+			<span class="text-sm text-[var(--color-text-muted)]">~</span>
+			<input
+				type="date"
+				bind:value={dateTo}
+				onchange={applyFilters}
+				class="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
+					focus:border-[var(--color-primary)] focus:outline-none"
+			/>
+		</div>
 		<button
 			onclick={applyFilters}
 			class="rounded-lg bg-[var(--color-primary)] px-5 py-2.5 text-sm font-medium text-white
@@ -149,7 +174,7 @@
 		>
 			검색
 		</button>
-		{#if searchQuery || selectedSource || selectedType}
+		{#if searchQuery || selectedSource || selectedType || dateFrom || dateTo}
 			<button
 				onclick={clearFilters}
 				class="rounded-lg border border-[var(--color-border)] px-4 py-2.5 text-sm text-[var(--color-text-muted)]

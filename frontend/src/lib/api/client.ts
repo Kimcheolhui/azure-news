@@ -100,6 +100,8 @@ export function getUpdates(params: {
 	source_id?: string;
 	update_type?: string;
 	q?: string;
+	date_from?: string;
+	date_to?: string;
 }): Promise<UpdateList> {
 	const qs = new URLSearchParams();
 	if (params.page) qs.set('page', String(params.page));
@@ -107,6 +109,8 @@ export function getUpdates(params: {
 	if (params.source_id) qs.set('source_id', params.source_id);
 	if (params.update_type) qs.set('update_type', params.update_type);
 	if (params.q) qs.set('q', params.q);
+	if (params.date_from) qs.set('date_from', params.date_from);
+	if (params.date_to) qs.set('date_to', params.date_to);
 	return fetchJson(`/api/v1/updates?${qs}`);
 }
 
