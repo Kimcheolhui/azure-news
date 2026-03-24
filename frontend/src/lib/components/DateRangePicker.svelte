@@ -53,7 +53,7 @@
 	readonly
 	class="box-border w-full rounded-lg border border-[var(--color-border)] px-3 text-sm bg-white cursor-pointer
 		focus:border-[var(--color-primary)] focus:outline-none"
-	style="height: 42px; line-height: 42px;"
+	style="height: 40px; line-height: 40px;"
 />
 
 <style>
