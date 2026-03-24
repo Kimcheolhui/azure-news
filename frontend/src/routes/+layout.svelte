@@ -10,7 +10,7 @@
 
 <div class="min-h-screen bg-[var(--color-bg)]">
 	<header class="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-		<div class="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
+		<div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
 			<a href="/" class="text-xl font-bold text-[var(--color-primary)] hover:opacity-80">
 				Azure News
 			</a>
@@ -18,7 +18,7 @@
 		</div>
 	</header>
 
-	<main class="mx-auto max-w-6xl px-4 py-6">
+	<main class="mx-auto max-w-7xl px-4 py-6">
 		{@render children()}
 	</main>
 </div>
