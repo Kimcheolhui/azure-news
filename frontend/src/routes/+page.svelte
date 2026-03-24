@@ -24,18 +24,18 @@
 	let datePickerRef: DateRangePicker;
 
 	const updateTypeOptions = [
-		{ value: 'new_feature', label: '🆕 신규' },
-		{ value: 'retirement', label: '🔴 종료' },
-		{ value: 'preview', label: '🔵 프리뷰' },
+		{ value: 'new_feature', label: '🆕 New Feature' },
+		{ value: 'retirement', label: '🔴 Retirement' },
+		{ value: 'preview', label: '🔵 Preview' },
 		{ value: 'ga', label: '🟢 GA' },
-		{ value: 'update', label: '🔄 업데이트' },
-		{ value: 'security', label: '🔒 보안' },
-		{ value: 'pricing', label: '💰 가격' },
-		{ value: 'deprecation', label: '⚠️ 중단 예고' },
-		{ value: 'guide', label: '📖 가이드' },
-		{ value: 'case_study', label: '💡 사용 사례' },
-		{ value: 'announcement', label: '📢 공지' },
-		{ value: 'event', label: '🎪 이벤트' },
+		{ value: 'update', label: '🔄 Update' },
+		{ value: 'security', label: '🔒 Security' },
+		{ value: 'pricing', label: '💰 Pricing' },
+		{ value: 'deprecation', label: '⚠️ Deprecation' },
+		{ value: 'guide', label: '📖 Guide' },
+		{ value: 'case_study', label: '💡 Case Study' },
+		{ value: 'announcement', label: '📢 Announcement' },
+		{ value: 'event', label: '🎪 Event' },
 	];
 
 	const categoryOptions = [
@@ -156,18 +156,18 @@
 
 	function typeLabel(type: string): string {
 		const labels: Record<string, string> = {
-			new_feature: '🆕 신규',
-			retirement: '🔴 종료',
-			preview: '🔵 프리뷰',
+			new_feature: '🆕 New Feature',
+			retirement: '🔴 Retirement',
+			preview: '🔵 Preview',
 			ga: '🟢 GA',
-			update: '🔄 업데이트',
-			security: '🔒 보안',
-			pricing: '💰 가격',
-			deprecation: '⚠️ 중단 예고',
-			guide: '📖 가이드',
-			case_study: '💡 사용 사례',
-			announcement: '📢 공지',
-			event: '🎪 이벤트'
+			update: '🔄 Update',
+			security: '🔒 Security',
+			pricing: '💰 Pricing',
+			deprecation: '⚠️ Deprecation',
+			guide: '📖 Guide',
+			case_study: '💡 Case Study',
+			announcement: '📢 Announcement',
+			event: '🎪 Event'
 		};
 		return labels[type] ?? type;
 	}
@@ -232,7 +232,7 @@
 	<div class="flex items-center gap-4">
 		<input
 			type="text"
-			placeholder="키워드로 검색하기"
+			placeholder="Search with Keyword"
 			bind:value={searchQuery}
 			onkeydown={(e) => e.key === 'Enter' && applyFilters()}
 			class="w-3/5 rounded-lg px-4 text-sm
@@ -264,21 +264,21 @@
 			<FilterSelect
 				options={sourceOptions}
 				bind:value={selectedSource}
-				placeholder="모든 소스"
+				placeholder="All sources"
 			/>
 		</div>
 		<div class="w-0 flex-1">
 			<FilterSelect
 				options={updateTypeOptions}
 				bind:value={selectedType}
-				placeholder="모든 유형"
+				placeholder="All types"
 			/>
 		</div>
 		<div class="w-0 flex-1">
 			<FilterSelect
 				options={categoryOptions}
 				bind:value={selectedCategory}
-				placeholder="모든 카테고리"
+				placeholder="All categories"
 			/>
 		</div>
 		<div class="w-0 flex-1">

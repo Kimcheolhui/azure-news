@@ -43,18 +43,18 @@
 
 	function typeLabel(type: string): string {
 		const labels: Record<string, string> = {
-			new_feature: '🆕 신규 기능',
-			retirement: '🔴 서비스 종료',
-			preview: '🔵 프리뷰',
-			ga: '🟢 정식 출시 (GA)',
-			update: '🔄 업데이트',
-			security: '🔒 보안',
-			pricing: '💰 가격 변경',
-			deprecation: '⚠️ 중단 예고',
-			guide: '📖 가이드',
-			case_study: '💡 사용 사례',
-			announcement: '📢 공지',
-			event: '🎪 이벤트'
+			new_feature: '🆕 New Feature',
+			retirement: '🔴 Retirement',
+			preview: '🔵 Preview',
+			ga: '🟢 GA',
+			update: '🔄 Update',
+			security: '🔒 Security',
+			pricing: '💰 Pricing',
+			deprecation: '⚠️ Deprecation',
+			guide: '📖 Guide',
+			case_study: '💡 Case Study',
+			announcement: '📢 Announcement',
+			event: '🎪 Event'
 		};
 		return labels[type] ?? type;
 	}
