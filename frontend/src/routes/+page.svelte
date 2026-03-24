@@ -254,7 +254,7 @@
 			onclick={applyFilters}
 			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-6 text-sm font-medium text-white
 				hover:bg-[var(--color-primary-hover)] transition-colors"
-			style="height: 48px; border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
+			style="height: 48px; border: none; box-shadow: 0 2px 8px rgba(0,120,212,0.35);"
 		>
 			적용
 		</button>
