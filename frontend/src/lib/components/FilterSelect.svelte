@@ -55,7 +55,7 @@
 		--item-is-active-bg="rgba(0,120,212,0.1)"
 		--item-is-active-color="var(--color-text)"
 		--font-size="0.875rem"
-		--height="42px"
+		--height="44px"
 		--padding="0 8px 0 12px"
 		--placeholder-color="var(--color-text-muted)"
 		--chevron-color="var(--color-text-muted)"

@@ -202,31 +202,31 @@
 			placeholder="키워드로 검색하기"
 			bind:value={searchQuery}
 			onkeydown={(e) => e.key === 'Enter' && applyFilters()}
-			class="w-3/5 rounded-lg px-4 py-3 text-sm
+			class="w-3/5 rounded-lg px-4 text-sm
 				focus:ring-1 focus:ring-[var(--color-primary)] focus:outline-none"
-			style="border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
+			style="height: 48px; border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
 		/>
 		<div class="flex-1"></div>
 		{#if searchQuery || selectedSource || selectedType || selectedCategory || dateFrom || dateTo}
 			<button
 				onclick={clearFilters}
-				class="shrink-0 rounded-lg px-4 py-3 text-sm text-[var(--color-text-muted)]
+				class="shrink-0 rounded-lg px-4 text-sm text-[var(--color-text-muted)]
 					hover:bg-gray-50 transition-colors"
-				style="border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
+				style="height: 48px; border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
 			>
 				초기화
 			</button>
 		{/if}
 		<button
 			onclick={applyFilters}
-			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-white
+			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-6 text-sm font-medium text-white
 				hover:bg-[var(--color-primary-hover)] transition-colors"
-			style="border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
+			style="height: 48px; border: none; box-shadow: 0 1px 6px rgba(0,0,0,0.14);"
 		>
 			적용
 		</button>
 	</div>
-	<div class="flex items-center gap-8">
+	<div class="flex items-center gap-6">
 		<div class="w-0 flex-1">
 			<FilterSelect
 				options={sourceOptions}
