@@ -18,6 +18,8 @@ dependencies = [
     "python-dotenv",
     "python-dateutil",
     "github-copilot-sdk",
+    "fastapi>=0.115",
+    "uvicorn[standard]",
 ]
 
 [project.optional-dependencies]
@@ -25,6 +27,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "pytest-cov",
+    "httpx",
 ]
 
 [project.scripts]
