@@ -16,11 +16,13 @@
 	let searchQuery = $state('');
 	let selectedSource = $state('');
 	let selectedType = $state('');
+	let selectedCategory = $state('');
 	let dateFrom = $state('');
 	let dateTo = $state('');
 	let datePickerRef: DateRangePicker;
 
 	const updateTypes = ['new_feature', 'retirement', 'preview', 'ga', 'update', 'security', 'pricing', 'deprecation', 'guide', 'case_study', 'announcement', 'event'];
+	const categories = ['compute', 'database', 'ai_ml', 'networking', 'storage', 'security', 'devtools', 'analytics', 'integration', 'management', 'iot', 'mixed_reality', 'other'];
 
 	let totalPages = $derived(Math.ceil(total / pageSize));
 
@@ -33,6 +35,7 @@
 				page_size: pageSize,
 				source_id: selectedSource || undefined,
 				update_type: selectedType || undefined,
+				category: selectedCategory || undefined,
 				q: searchQuery || undefined,
 				date_from: dateFrom || undefined,
 				date_to: dateTo || undefined
@@ -63,6 +66,7 @@
 		searchQuery = '';
 		selectedSource = '';
 		selectedType = '';
+		selectedCategory = '';
 		dateFrom = '';
 		dateTo = '';
 		datePickerRef?.clear();
@@ -84,7 +88,7 @@
 		});
 	}
 
-	function capitalize(s: string): string {
+	function categoryLabel(s: string): string {
 		const labels: Record<string, string> = {
 			compute: 'Compute',
 			database: 'Database',
@@ -158,7 +162,7 @@
 </section>
 
 <!-- Search & Filters -->
-<div class="mb-6 space-y-3">
+<div class="mb-6 space-y-2">
 	<div class="flex items-center gap-2">
 		<input
 			type="text"
@@ -190,6 +194,19 @@
 				<option value={type}>{typeLabel(type)}</option>
 			{/each}
 		</select>
+		<select
+			bind:value={selectedCategory}
+			onchange={applyFilters}
+			class="shrink-0 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm bg-white
+				focus:border-[var(--color-primary)] focus:outline-none"
+		>
+			<option value="">모든 카테고리</option>
+			{#each categories as cat}
+				<option value={cat}>{categoryLabel(cat)}</option>
+			{/each}
+		</select>
+	</div>
+	<div class="flex items-center gap-2">
 		<DateRangePicker
 			bind:this={datePickerRef}
 			{dateFrom}
@@ -203,7 +220,7 @@
 		>
 			검색
 		</button>
-		{#if searchQuery || selectedSource || selectedType || dateFrom || dateTo}
+		{#if searchQuery || selectedSource || selectedType || selectedCategory || dateFrom || dateTo}
 			<button
 				onclick={clearFilters}
 				class="shrink-0 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm text-[var(--color-text-muted)]
@@ -212,10 +229,10 @@
 				초기화
 			</button>
 		{/if}
+		<span class="ml-auto text-sm text-[var(--color-text-muted)]">
+			총 <strong class="text-[var(--color-text)]">{total}</strong>건
+		</span>
 	</div>
-	<p class="text-sm text-[var(--color-text-muted)]">
-		총 <strong class="text-[var(--color-text)]">{total}</strong>건
-	</p>
 </div>
 
 <!-- Update List -->
@@ -263,7 +280,7 @@
 					<span>{formatDate(update.published_date)}</span>
 					{#if update.categories && update.categories.length > 0}
 						<span>·</span>
-						<span>{update.categories.map(c => capitalize(c)).join(', ')}</span>
+						<span>{update.categories.map(c => categoryLabel(c)).join(', ')}</span>
 					{/if}
 				</div>
 			</a>

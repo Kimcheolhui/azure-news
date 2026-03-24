@@ -23,6 +23,7 @@ def list_updates(
     page_size: int = Query(20, ge=1, le=100),
     source_id: UUID | None = None,
     update_type: str | None = None,
+    category: str | None = None,
     q: str | None = None,
     date_from: date | None = None,
     date_to: date | None = None,
@@ -33,8 +34,9 @@ def list_updates(
     if source_id:
         stmt = stmt.where(Update.source_id == source_id)
     if update_type:
-        # update_type is a JSONB list — use contains operator
         stmt = stmt.where(Update.update_type.contains(cast([update_type], JSONB)))
+    if category:
+        stmt = stmt.where(Update.categories.contains(cast([category], JSONB)))
     if q:
         stmt = stmt.where(
             Update.title.ilike(f"%{q}%") | Update.title_ko.ilike(f"%{q}%")
