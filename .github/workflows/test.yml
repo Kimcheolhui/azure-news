@@ -20,7 +20,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e "./backend[dev]"
 
       - name: Run tests
-        run: pytest --tb=short -q
+        run: pytest backend/tests --tb=short -q

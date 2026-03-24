@@ -23,7 +23,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -e .
+        run: pip install -e ./backend
 
       - name: Seed sources
         run: python -m ingest sources seed
