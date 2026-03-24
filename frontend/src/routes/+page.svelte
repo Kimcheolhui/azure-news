@@ -132,8 +132,8 @@
 	<div class="relative">
 		<h1 class="text-3xl font-bold tracking-tight">Azure News</h1>
 		<p class="mt-2 max-w-xl text-base text-white/85">
-			Azure 에코시스템의 최신 업데이트, 신규 기능, 보안 공지를 한눈에 확인하세요.
-			AI 기반 자동 분류와 한국어 번역으로 빠르게 파악할 수 있습니다.
+			Azure 생태계의 최신 업데이트, 신규 기능, 보안 공지를 한눈에 확인하세요.
+			AI 기반 자동 분류·한국어 번역과 심층 분석 리포트로 변화의 핵심을 빠르게 파악할 수 있습니다.
 		</p>
 	</div>
 </section>
