@@ -205,13 +205,7 @@
 			class="w-3/5 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm
 				focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
 		/>
-		<button
-			onclick={applyFilters}
-			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-5 py-2 text-sm font-medium text-white
-				hover:bg-[var(--color-primary-hover)] transition-colors"
-		>
-			적용
-		</button>
+		<div class="flex-1"></div>
 		{#if searchQuery || selectedSource || selectedType || selectedCategory || dateFrom || dateTo}
 			<button
 				onclick={clearFilters}
@@ -221,6 +215,13 @@
 				초기화
 			</button>
 		{/if}
+		<button
+			onclick={applyFilters}
+			class="shrink-0 rounded-lg bg-[var(--color-primary)] px-5 py-2 text-sm font-medium text-white
+				hover:bg-[var(--color-primary-hover)] transition-colors"
+		>
+			적용
+		</button>
 	</div>
 	<div class="flex items-center gap-3">
 		<div class="w-0 flex-1">
@@ -244,12 +245,14 @@
 				placeholder="모든 카테고리"
 			/>
 		</div>
-		<DateRangePicker
-			bind:this={datePickerRef}
-			{dateFrom}
-			{dateTo}
-			onchange={(from, to) => { dateFrom = from; dateTo = to; }}
-		/>
+		<div class="w-0 flex-1">
+			<DateRangePicker
+				bind:this={datePickerRef}
+				{dateFrom}
+				{dateTo}
+				onchange={(from, to) => { dateFrom = from; dateTo = to; }}
+			/>
+		</div>
 		<span class="shrink-0 text-sm text-[var(--color-text-muted)]">
 			총 <strong class="text-[var(--color-text)]">{total}</strong>건
 		</span>
