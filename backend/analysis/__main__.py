@@ -29,11 +29,26 @@ def generate():
 
 @generate.command("update")
 @click.argument("update_id")
-def generate_update(update_id: str):
+@click.option("--force", is_flag=True, help="Regenerate even if already completed.")
+def generate_update(update_id: str, force: bool):
     """Generate a report for a single update by ID."""
     import asyncio
 
     from .pipeline.orchestrator import run_pipeline
+
+    if force:
+        from ingest.db.session import get_session
+        from .models import Report
+
+        with get_session() as session:
+            report = (
+                session.query(Report)
+                .filter(Report.update_id == update_id)
+                .first()
+            )
+            if report and report.status == "completed":
+                report.status = "pending"
+                click.echo("Reset existing report to pending.")
 
     click.echo(f"Generating report for update {update_id}...")
     try:
