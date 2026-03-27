@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import logging
 import time
+import traceback
 import uuid
 from datetime import datetime, timezone
+from typing import Any
 
 from sqlalchemy.orm import Session
 
@@ -44,19 +46,19 @@ def run_ingest(
     session.add(run)
     session.flush()
 
-    retry_errors: list[dict] = []
+    retry_errors: list[dict[str, Any]] = []
 
     try:
         # 3. Invoke scraper with retries
         scraper = get_scraper(source_name)
-        items: list[dict] = []
+        items: list[dict[str, Any]] = []
 
         for attempt in range(max_retries + 1):
             try:
                 items = scraper.scrape()
             except Exception as exc:
                 retry_errors.append(
-                    {"attempt": attempt + 1, "error": str(exc), "type": "exception"}
+                    {"attempt": attempt + 1, "error": str(exc), "traceback": traceback.format_exc(), "type": "exception"}
                 )
                 logger.warning(
                     "Scraper %s attempt %d/%d raised: %s",
@@ -91,6 +93,15 @@ def run_ingest(
                     source_name,
                     max_retries + 1,
                 )
+
+        # Mark as failed if no items were found after all retries
+        if not items and retry_errors:
+            run.items_found = 0
+            run.status = "failed"
+            run.finished_at = datetime.now(timezone.utc)
+            run.errors = {"error": "empty results after all retries", "retries": retry_errors}
+            session.flush()
+            return run
 
         run.items_found = len(items)
 
@@ -152,7 +163,7 @@ def run_ingest(
         logger.exception("Ingest failed for %s", source_name)
         run.status = "failed"
         run.finished_at = datetime.now(timezone.utc)
-        run.errors = {"error": str(exc), "retries": retry_errors}
+        run.errors = {"error": str(exc), "traceback": traceback.format_exc(), "retries": retry_errors}
         session.flush()
 
     # 7. Check for consecutive failure alert

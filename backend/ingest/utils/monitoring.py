@@ -57,16 +57,24 @@ def get_health_summary(session: Session) -> list[dict]:
     - total_runs
     """
     sources = session.query(Source).order_by(Source.name).all()
+
+    # Batch-fetch all runs grouped by source_id to avoid N+1 queries
+    source_ids = [src.id for src in sources]
+    all_runs = (
+        session.query(IngestRun)
+        .filter(IngestRun.source_id.in_(source_ids))
+        .order_by(IngestRun.source_id, IngestRun.started_at.desc())
+        .all()
+    )
+
+    runs_by_source: dict[str, list[IngestRun]] = {}
+    for run in all_runs:
+        runs_by_source.setdefault(run.source_id, []).append(run)
+
     results: list[dict] = []
 
     for src in sources:
-        runs = (
-            session.query(IngestRun)
-            .filter_by(source_id=src.id)
-            .order_by(IngestRun.started_at.desc())
-            .all()
-        )
-
+        runs = runs_by_source.get(src.id, [])
         total_runs = len(runs)
 
         if not runs:

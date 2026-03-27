@@ -49,6 +49,9 @@ def scrape_run(source: str | None, all_sources: bool, dry_run: bool):
     from .models import Source
 
     if source:
+        if source not in SCRAPERS:
+            click.echo(f"Unknown source: {source!r}. Available: {', '.join(sorted(SCRAPERS))}.")
+            return
         with get_session() as session:
             run = run_ingest(source, session)
             _print_run(run)

@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import Any
 
 import requests
 
@@ -12,7 +15,7 @@ class BaseScraper(ABC):
         self._http: requests.Session = create_session()
 
     @abstractmethod
-    def scrape(self) -> list[dict]:
+    def scrape(self) -> list[dict[str, Any]]:
         """Fetch and parse updates from the source. Returns list of dicts ready for Update model."""
         ...
 
