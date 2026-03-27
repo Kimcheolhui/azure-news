@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime, timezone
+from urllib.parse import urljoin
 
 import feedparser
 from bs4 import BeautifulSoup
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 BLOG_URL = "https://azure.microsoft.com/en-us/blog/"
 BLOG_FEED_URL = "https://azure.microsoft.com/en-us/blog/feed/"
+BASE_DOMAIN = "https://azure.microsoft.com"
 REQUEST_TIMEOUT = 30
 
 
@@ -22,8 +24,8 @@ class AzureBlogScraper(BaseScraper):
     """Fetch and parse Azure Blog posts.
 
     Strategy:
-    1. Try RSS feed first (most reliable).
-    2. Fall back to scraping the HTML listing page.
+    1. Try RSS feed first (most reliable), paginating with ``?paged=N``.
+    2. Fall back to scraping HTML listing pages, following next-page links.
     """
 
     @property
@@ -39,7 +41,7 @@ class AzureBlogScraper(BaseScraper):
         return self._try_html()
 
     # ------------------------------------------------------------------
-    # RSS path
+    # RSS path (with pagination)
     # ------------------------------------------------------------------
 
     def _try_rss(self) -> list[dict]:
@@ -47,36 +49,67 @@ class AzureBlogScraper(BaseScraper):
         if not feed_url:
             feed_url = BLOG_FEED_URL
 
-        logger.info("Trying Azure Blog RSS feed: %s", feed_url)
-        try:
-            resp = self._http.get(feed_url)
-            resp.raise_for_status()
-        except Exception as exc:
-            logger.warning("Could not fetch blog RSS feed: %s", exc)
-            return []
+        all_results: list[dict] = []
+        seen_urls: set[str] = set()
 
-        feed = feedparser.parse(resp.text)
-        if feed.bozo and not feed.entries:
-            logger.warning("feedparser error on blog feed: %s", feed.bozo_exception)
-            return []
+        for page in range(1, self._max_pages + 1):
+            paged_url = feed_url if page == 1 else f"{feed_url}?paged={page}"
+            logger.info("Trying Azure Blog RSS feed page %d: %s", page, paged_url)
 
+            try:
+                resp = self._http.get(paged_url)
+                resp.raise_for_status()
+            except Exception as exc:
+                if page == 1:
+                    logger.warning("Could not fetch blog RSS feed: %s", exc)
+                else:
+                    logger.debug("RSS page %d unavailable (end of feed): %s", page, exc)
+                break
+
+            feed = feedparser.parse(resp.text)
+            if feed.bozo and not feed.entries:
+                if page == 1:
+                    logger.warning("feedparser error on blog feed: %s", feed.bozo_exception)
+                break
+
+            if not feed.entries:
+                logger.debug("RSS page %d returned 0 entries, stopping", page)
+                break
+
+            page_results = self._parse_feed_entries(feed.entries, seen_urls)
+            if not page_results:
+                logger.debug("RSS page %d had no new entries, stopping", page)
+                break
+
+            all_results.extend(page_results)
+
+        logger.info("Parsed %d total entries from Azure Blog RSS", len(all_results))
+        return all_results
+
+    def _parse_feed_entries(
+        self, entries: list, seen_urls: set[str]
+    ) -> list[dict]:
+        """Parse feed entries, skipping URLs already seen across pages."""
         results: list[dict] = []
-        for entry in feed.entries:
+        for entry in entries:
+            url = entry.get("link", "")
+            if not url or url in seen_urls:
+                continue
+            seen_urls.add(url)
+
             published = self._parse_published(entry)
             categories = [t.term for t in getattr(entry, "tags", []) if hasattr(t, "term")]
 
             results.append(
                 {
                     "title": entry.get("title", ""),
-                    "source_url": entry.get("link", ""),
+                    "source_url": url,
                     "published_date": published,
                     "summary": strip_html(entry.get("summary", "")),
                     "categories": categories or None,
                     "raw_data": dict(entry),
                 }
             )
-
-        logger.info("Parsed %d entries from Azure Blog RSS", len(results))
         return results
 
     def _discover_feed_url(self) -> str | None:
@@ -92,28 +125,51 @@ class AzureBlogScraper(BaseScraper):
         if link and link.get("href"):
             href = link["href"]
             if href.startswith("/"):
-                href = "https://azure.microsoft.com" + href
+                href = BASE_DOMAIN + href
             logger.info("Discovered blog RSS feed URL: %s", href)
             return href
         return None
 
     # ------------------------------------------------------------------
-    # HTML scrape fallback
+    # HTML scrape fallback (with pagination)
     # ------------------------------------------------------------------
 
     def _try_html(self) -> list[dict]:
-        logger.info("Scraping Azure Blog HTML: %s", BLOG_URL)
-        try:
-            resp = self._http.get(BLOG_URL)
-            resp.raise_for_status()
-        except Exception as exc:
-            logger.error("Failed to fetch blog page: %s", exc)
-            return []
+        all_results: list[dict] = []
+        seen_urls: set[str] = set()
+        page_url: str | None = BLOG_URL
 
-        soup = BeautifulSoup(resp.text, "html.parser")
+        for page in range(1, self._max_pages + 1):
+            if not page_url:
+                break
+
+            logger.info("Scraping Azure Blog HTML page %d: %s", page, page_url)
+            try:
+                resp = self._http.get(page_url)
+                resp.raise_for_status()
+            except Exception as exc:
+                logger.error("Failed to fetch blog page: %s", exc)
+                break
+
+            soup = BeautifulSoup(resp.text, "html.parser")
+            page_results = self._parse_html_articles(soup, seen_urls)
+
+            if not page_results:
+                logger.debug("HTML page %d had no new articles, stopping", page)
+                break
+
+            all_results.extend(page_results)
+            page_url = self._find_next_page_url(soup)
+
+        logger.info("Parsed %d total entries from Azure Blog HTML", len(all_results))
+        return all_results
+
+    def _parse_html_articles(
+        self, soup: BeautifulSoup, seen_urls: set[str]
+    ) -> list[dict]:
+        """Extract articles from a single HTML page."""
         results: list[dict] = []
 
-        # Try common article selectors
         articles = (
             soup.select("article")
             or soup.select(".post-item")
@@ -130,7 +186,11 @@ class AzureBlogScraper(BaseScraper):
             link_tag = title_tag if title_tag.name == "a" else title_tag.find("a")
             href = link_tag["href"] if link_tag and link_tag.get("href") else ""
             if href and href.startswith("/"):
-                href = "https://azure.microsoft.com" + href
+                href = BASE_DOMAIN + href
+
+            if not href or href in seen_urls:
+                continue
+            seen_urls.add(href)
 
             time_tag = article.find("time")
             published = None
@@ -153,8 +213,28 @@ class AzureBlogScraper(BaseScraper):
                 }
             )
 
-        logger.info("Parsed %d entries from Azure Blog HTML", len(results))
         return results
+
+    def _find_next_page_url(self, soup: BeautifulSoup) -> str | None:
+        """Find the next-page link from pagination elements."""
+        # <a rel="next">
+        next_link = soup.find("a", attrs={"rel": "next"})
+        if next_link and next_link.get("href"):
+            href = next_link["href"]
+            if href.startswith("/"):
+                href = BASE_DOMAIN + href
+            return href
+
+        # <a class="next ..."> or <a class="page-numbers next">
+        for selector in ("a.next", "a.page-numbers.next", ".pagination a.next"):
+            tag = soup.select_one(selector)
+            if tag and tag.get("href"):
+                href = tag["href"]
+                if href.startswith("/"):
+                    href = BASE_DOMAIN + href
+                return href
+
+        return None
 
     # ------------------------------------------------------------------
     # Helpers

@@ -17,7 +17,13 @@ REQUEST_TIMEOUT = 30
 
 
 class AzureUpdatesRssScraper(BaseScraper):
-    """Fetch and parse the Azure Updates RSS feed."""
+    """Fetch and parse the Azure Updates RSS feed.
+
+    Note: This Microsoft API serves a flat RSS feed without pagination
+    support.  The feed typically contains the most recent ~50 entries.
+    During high-volume periods (Ignite, Build) some older items may
+    rotate out before the next scheduled scrape.
+    """
 
     @property
     def source_name(self) -> str:
