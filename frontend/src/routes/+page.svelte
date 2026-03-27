@@ -369,15 +369,36 @@
 					hover:shadow-[0_6px_16px_rgba(0,0,0,0.16)] hover:bg-[var(--color-surface-raised)]
 					transition-all duration-150"
 			>
-				{#if update.update_type && update.update_type.length > 0}
-					<div class="flex flex-wrap gap-1.5 mb-3">
-						{#each update.update_type as type}
-							<span class="rounded-full px-3 py-1 text-xs font-semibold ring-1 {typeBadgeClass(type)}">
-								{typeLabel(type)}
-							</span>
-						{/each}
+				<div class="flex items-start justify-between gap-3 mb-3">
+					{#if update.update_type && update.update_type.length > 0}
+						<div class="flex flex-wrap gap-1.5">
+							{#each update.update_type as type}
+								<span class="rounded-full px-3 py-1 text-xs font-semibold ring-1 {typeBadgeClass(type)}">
+									{typeLabel(type)}
+								</span>
+							{/each}
+						</div>
+					{:else}
+						<div></div>
+					{/if}
+					<div class="flex items-center gap-2 shrink-0 text-xs text-[var(--color-text-subtle)]">
+						{#if update.services_affected && update.services_affected.length > 0}
+							<div class="flex gap-1">
+								{#each update.services_affected.slice(0, 2) as service}
+									<span class="rounded-md px-1.5 py-0.5 text-[11px] font-medium"
+										style="background: var(--color-primary-light); color: var(--color-primary);">
+										{service}
+									</span>
+								{/each}
+								{#if update.services_affected.length > 2}
+									<span class="text-[var(--color-text-subtle)]">+{update.services_affected.length - 2}</span>
+								{/if}
+							</div>
+							<span class="text-[var(--color-border-hover)]">·</span>
+						{/if}
+						<span class="font-medium">{formatDate(update.published_date)}</span>
 					</div>
-				{/if}
+				</div>
 				<h3 class="text-[20px] font-semibold text-[var(--color-text)] leading-snug group-hover:opacity-70 transition-opacity">
 					{update.title_ko || update.title}
 				</h3>
@@ -389,27 +410,6 @@
 						{update.summary_ko || update.summary}
 					</p>
 				{/if}
-				<div class="mt-5 flex items-center gap-3 text-xs text-[var(--color-text-subtle)]">
-					<span class="font-medium">{formatDate(update.published_date)}</span>
-					{#if update.services_affected && update.services_affected.length > 0}
-						<span class="text-[var(--color-border-hover)]">·</span>
-						<div class="flex gap-1">
-							{#each update.services_affected.slice(0, 3) as service}
-								<span class="rounded-md px-1.5 py-0.5 text-[11px] font-medium"
-									style="background: var(--color-primary-light); color: var(--color-primary);">
-									{service}
-								</span>
-							{/each}
-							{#if update.services_affected.length > 3}
-								<span class="text-[var(--color-text-subtle)]">+{update.services_affected.length - 3}</span>
-							{/if}
-						</div>
-					{/if}
-					{#if update.categories && update.categories.length > 0}
-						<span class="text-[var(--color-border-hover)]">·</span>
-						<span>{update.categories.map(c => categoryLabel(c)).join(', ')}</span>
-					{/if}
-				</div>
 			</a>
 		{/each}
 	</div>
