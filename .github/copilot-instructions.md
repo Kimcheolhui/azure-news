@@ -1,4 +1,4 @@
-# Azure News — Project Instructions
+# Microsoft News — Project Instructions
 
 Azure 에코시스템 업데이트를 수집·분석·표시하는 풀스택 서비스. Python 백엔드 + SvelteKit 프론트엔드 모노레포.
 

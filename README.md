@@ -1,4 +1,4 @@
-# Azure News
+# Microsoft News
 
 Data ingestion pipeline that scrapes Azure-ecosystem updates from multiple sources and stores them in PostgreSQL.
 
@@ -22,14 +22,14 @@ python -m ingest scrape run --all
 
 ## CLI Commands
 
-| Command | Description |
-|---|---|
-| `python -m ingest scrape run --all` | Scrape all enabled sources |
-| `python -m ingest scrape run --source azure-blog` | Scrape a single source |
-| `python -m ingest scrape run --dry-run --all` | Dry run (no DB writes) |
-| `python -m ingest sources seed` | Seed default sources (idempotent) |
-| `python -m ingest sources list` | List configured sources |
-| `python -m ingest runs --last 4` | Show recent ingest runs |
+| Command                                           | Description                       |
+| ------------------------------------------------- | --------------------------------- |
+| `python -m ingest scrape run --all`               | Scrape all enabled sources        |
+| `python -m ingest scrape run --source azure-blog` | Scrape a single source            |
+| `python -m ingest scrape run --dry-run --all`     | Dry run (no DB writes)            |
+| `python -m ingest sources seed`                   | Seed default sources (idempotent) |
+| `python -m ingest sources list`                   | List configured sources           |
+| `python -m ingest runs --last 4`                  | Show recent ingest runs           |
 
 ## Scheduling
 
@@ -46,8 +46,8 @@ Automated ingestion runs via GitHub Actions:
 
 ### Required Secrets
 
-| Secret | Description |
-|---|---|
+| Secret         | Description                  |
+| -------------- | ---------------------------- |
 | `DATABASE_URL` | PostgreSQL connection string |
 
 ## Development
