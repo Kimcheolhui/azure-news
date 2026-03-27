@@ -8,6 +8,7 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   ingest:
@@ -30,6 +31,9 @@ jobs:
 
       - name: Run all scrapers
         run: python -m ingest scrape run --all
+
+      - name: Enrich new updates
+        run: python -m analysis enrich pending
 
       - name: Show run summary
         run: python -m ingest runs --last 4

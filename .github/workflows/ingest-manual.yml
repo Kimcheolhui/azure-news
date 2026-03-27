@@ -14,6 +14,8 @@ on:
           - azure-blog
           - fabric-blog
           - github-blog
+          - microsoft-blog
+          - microsoft-tech-community
       dry_run:
         description: 'Dry run (no DB writes)'
         required: false
@@ -22,6 +24,7 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   ingest:
@@ -54,6 +57,10 @@ jobs:
             ARGS="$ARGS --dry-run"
           fi
           python -m ingest scrape run $ARGS
+
+      - name: Enrich new updates
+        if: ${{ inputs.dry_run == false }}
+        run: python -m analysis enrich pending
 
       - name: Show run summary
         if: ${{ inputs.dry_run == false }}
